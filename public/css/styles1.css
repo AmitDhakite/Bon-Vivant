@@ -376,15 +376,20 @@ section .section-title {
   }
   .collapse{
     /* background-color: grey; */opacity: 1;
+    width: 75%;
+    padding: 0;
     background-color: rgba(30,30,30,0.8);
     border-radius: 10px;
   }
   .l {
     width: 300px;
-    height:
+    padding: 0;
+    margin: 0;
   }
   .r{
     width: 340px;
+    padding: 0;
+    margin: 0;
   }
   .navimg{
     height: 100px;
@@ -522,7 +527,7 @@ section .section-title {
     /* font-weight: bold; */
     letter-spacing: 1.5px;
     line-height: 1.5;
-    padding-bottom: 2rem;
+    padding-bottom: 0;
   }
   .lastb{
     margin: 1rem;
@@ -532,7 +537,12 @@ section .section-title {
     padding: 0.5rem;
   }
   .lr{
-    margin-right: -50px;
+    /* margin-right: -50px; */
+    margin: 25px;
+  }
+  .navbar-toggler-icon{
+    /* border: 25px; */
+    /* margin-top: 25px; */
   }
   .about{
     font-size: 1.25rem;
@@ -619,7 +629,7 @@ section .section-title {
   @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
   .niche {
     margin-top: 60px;
-    padding: 60px 20px 60px 20px;
+    padding: 20px 20px 20px 20px;
   }
 
   section .section-title {
@@ -634,8 +644,8 @@ section .section-title {
   #footer h5{
   	padding-left: 10px;
       border-left: 3px solid #eeeeee;
-      padding-bottom: 6px;
-      margin-bottom: 20px;
+      padding-bottom: 0;
+      margin-bottom:0;
       color:#ffffff;
   }
   #footer a {
@@ -688,7 +698,7 @@ section .section-title {
       padding-left: 0;
       border-left: transparent;
       padding-bottom: 0px;
-      margin-bottom: 10px;
+      margin-bottom: 0;
   }
   }
   .fooot{
