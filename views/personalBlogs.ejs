@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.80.0">
-  <title>Category</title>
+  <title>Bon Vivant-YourBlogs</title>
 
   <base href="/">
 
@@ -93,12 +93,12 @@
       </div>
     </div>
 
-    <a href="/postblog/<%=user.Id%>" type="button" class="btn btn-dark bt btn-lg" name="button">Post new Blog</a>
+    <!-- <a href="/postblog/<%=user.Id%>" type="button" class="btn btn-dark bt btn-lg" name="button">Post new Blog</a> -->
     <!-- ///////////////////////////////////////////////////////////////////// -->
     <div class="container marketing">
-      <% if(blogs.length==0){ %>
+      <% if(blogs==undefined||blogs.length==0){ %>
           <h2 class="featurette-heading" style="margin-top: 50px;">There are no blogs posted by you.</h2>
-      <% } %>
+      <% } else { %>
       <% var i=0; %>
 
       <% blogs.forEach(function(blog){%>
@@ -135,7 +135,7 @@
         <% } %>
       </div>
 
-      <% }); %>
+      <% }); }%>
 
       <hr class="featurette-divider">
     </div><!-- /.container -->
