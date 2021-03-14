@@ -4,7 +4,6 @@ const mysql = require("mysql");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const path = require("path");
-// const fileupload = require("express-fileupload");
 var multer = require("multer");
 const upload = require('./multer');
 const cloudinary = require("./cloudinary");
@@ -26,12 +25,12 @@ function getUsers() {
     users = uss;
   });
 }
-////////////////////////////////// CONNECTION TO MYSQL SERVER //////////////////////////////////////////////////////////
+
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "BonvivantDB",
+  host: "sql3.freesqldatabase.com",
+  user: "sql3398789",
+  password: "PqMkQXEeId",
+  database: "sql3398789",
   multipleQueries: true
 });
 con.connect(function(err) {
@@ -44,7 +43,7 @@ con.connect(function(err) {
 
 ///////////////////////////////// USER TABLE ///////////////////////////////////////////////////////////////////////
 app.get("/createTableForUser", function(req, res) {
-  con.query("CREATE TABLE User (Id INT NOT NULL AUTO_INCREMENT, First_Name VARCHAR(255) NOT NULL, Last_Name VARCHAR(255) NOT NULL, Email VARCHAR(255) NOT NULL, Contact_No VARCHAR(255) NOT NULL, Password VARCHAR(255) NOT NULL, PRIMARY KEY(Id))", function(err, result) {
+    con.query("CREATE TABLE User (Id INT NOT NULL AUTO_INCREMENT, First_Name VARCHAR(255) NOT NULL, Last_Name VARCHAR(255) NOT NULL, Email VARCHAR(255) NOT NULL, Contact_No VARCHAR(255) NOT NULL, Password VARCHAR(255) NOT NULL, PRIMARY KEY(Id))", function(err, result) {
     if (!err) {
       res.send("<h1>Table Created</h1>");
       console.log("Table Created!!");
