@@ -73,7 +73,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/postblog/<%=user.Id%>" tabindex="-1">Post</a>
             </li>
-            <li class="nav-item ml-auto">
+            <li class="nav-item">
               <a class="nav-link" aria-current="page" href="/profilepg/<%=user.Id%>"><%=user.First_Name+" "+user.Last_Name %></a>
             </li>
             <li class="nav-item">
@@ -85,14 +85,14 @@
     </nav>
   </header>
 
+<div class="blogout">
 <div class="blog ">
-  <h1><strong><%=blog.Title%></strong></h1>
-  <h5><strong>Posted <%=String(blog.Date_Of_Blog).substring(0, 10)%>, <%=String(blog.Date_Of_Blog).substring(10, 15)%> by  <%=users[(blog.User_Id)-1].First_Name+" "+users[(blog.User_Id)-1].Last_Name%></strong></h5>
   <div class="card blogcard card-raised img-raised">
-  <img class="card-img-top" src='<%=blog.Image%>' alt="Card image cap"><br><br><br><br>
-  <div class="card-body">
+    <h1><strong><%=blog.Title%></strong></h1>
+    <h5><strong>Posted <%=String(blog.Date_Of_Blog).substring(0, 10)%>, <%=String(blog.Date_Of_Blog).substring(10, 15)%> by  <%=users[(blog.User_Id)-1].First_Name+" "+users[(blog.User_Id)-1].Last_Name%></strong></h5>
+      <img class="card-img-top img-raised" src='<%=blog.Image%>' alt="Card image cap"><br><br><br><br>
+  <div class="card-body content">
     <h4 style="text-align: left;"class="card-title"><strong><%=blog.Content%></strong></h4>
-
     <% if(liked.length==0){ %>
       <% var ref = "like/"+user.Id+"/"+blog.Id; %>
       <a class="btn like btn-primary" href="<%=ref%>">Like</a>
@@ -118,13 +118,15 @@
 
       <form class="" action="/comment1/<%=blog.Id%>/<%=user.Id%>" method="post">
         <label for=""><strong>Comment here...</strong></label>
-        <textarea name="comment" rows="2" cols="80"></textarea>
+        <input type="text" class="comtext fluid-container"name="comment" >
         <button type="submit" class="btn btn-sm btn-info" name="button">Post</button>
       </form>
     </div>
   </div>
   </div>
 </div>
+</div>
+
 <footer class="container">
   <p class="float-end"><button class="btn btn-dark" onclick="topFunction()" id="myBtn" title="Go to top">Top</button></p>
   <p>&copy; 2020–2021 BonVivant Inc. &middot; <a >Privacy</a> &middot; <a >Terms</a></p>

@@ -72,7 +72,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/postblog/<%=user.Id%>" tabindex="-1">Post</a>
             </li>
-            <li class="nav-item ml-auto">
+            <li class="nav-item">
               <a class="nav-link" aria-current="page" href="/profilepg/<%=user.Id%>"><%=user.First_Name+" "+user.Last_Name %></a>
             </li>
             <li class="nav-item">
@@ -104,7 +104,7 @@
       <% i++; %>
       <hr class="featurette-divider">
 
-      <div class="row featurette">
+      <div class="row featurette profileblog">
         <% if(i%2==0){ %>
         <div class="col-md-5">
           <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto card-raised" style="background-image: url('<%=blog.Image%>');  background-repeat: no-repeat;
@@ -114,13 +114,13 @@
         </div>
         <% } %>
         <div class="col-md-7">
-          <h2 class="featurette-heading" style="margin-top: 50px; text-align: left;"><%=blog.Title%></h2>
+          <h2 class="featurette-heading bloghead" style=" text-align: left;"><%=blog.Title%></h2>
           <h5><strong>Posted by <%=users[(blog.User_Id)-1].First_Name+" "+users[(blog.User_Id)-1].Last_Name%></strong></h5>
           <p class="lead" style="font-size: 1.5rem; line-height: 2rem;"><br><%=blog.Content.slice(0, 350)%>.....<a href="/blog/<%=blog.Id%>/<%=user.Id%>">Read More</a></p>
           <br><br>
           <span id="sp" class="badge badge-danger"><%=blog.Likes%> ❤️</span>
           <span id="sp" class="badge badge-info"><%=Category%></span>
-          <span id="sp" style="margin-left: 430px;" class="badge badge-dark"><%=String(blog.Date_Of_Blog).substring(0, 15)%></span>
+          <span id="sp"  class="badge badge-dark date"><%=String(blog.Date_Of_Blog).substring(0, 15)%></span>
           <hr>
 
         </div>

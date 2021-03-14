@@ -225,6 +225,8 @@ app.post('/postblog', upload.array('image'), async (req, res, next) => {
     con.query("SELECT Id FROM Category WHERE Type_Of_Cousine=?", req.body.category, function(err, id) {
       if (!err) {
         // console.log(req.file);
+        // console.log(id);
+        // console.log(req.body);
         let dt = new Date();
         const sql = "INSERT INTO Blog (User_Id, Category_Id, Title, Content, Image, Date_Of_Blog, Likes) VALUES (?,?,?,?,?,?,?)";
         const values = [req.body.Id, id[0].Id, req.body.title, req.body.content, urls[0].url, dt, 0];

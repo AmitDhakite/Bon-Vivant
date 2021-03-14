@@ -1002,11 +1002,20 @@ h6, .h6 {
   text-align: left;
 }
 .blog{
-  /* height: 600px; */
+  text-align: center;
+  padding: 100px;
+}
+.blog h1{
   text-align: left;
-  width: auto;
-  padding: 60px 300px 50px 450px;
-  margin: auto;
+  padding: 30px;
+  padding-bottom: 0;
+}
+.blog h5{
+  padding: 0 0 15px 30px;
+  text-align: left;
+}
+.blogout{
+  text-align: center;
 }
 .card-body{
   text-align: left;
@@ -1052,4 +1061,77 @@ h6, .h6 {
 }
 .img-raised1 {
     box-shadow: 0 16px 10px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+}
+.comtext{
+  width: 80%;
+  height: 80px;
+}
+.date{
+  margin-left: 430px;
+  font-size: 1rem;
+}
+.bloghead{
+  margin-top: 50px;
+}
+.amit{
+margin-left: 200px;
+}
+@media (max-width: 1028px) {
+  .date {
+    margin-left: 10px;!important
+    font-size: 1rem;
+  }
+.amit{
+  margin-left: 80px;
+  font-size: 2rem;
+}
+  .content h4{
+    font-size: 1rem;
+  }
+  .marketing{
+
+  }
+  .bloghead{
+    margin-top: 0;
+  }
+  .blogcard{
+    width: 90%;
+    height: auto;
+    padding:10px;
+    text-align: left;
+  }
+  .comtext{
+    width: 80%;
+  }
+  .blog{
+    text-align: center;
+    padding: 50px 15px 50px 15px;
+  }
+  .blog h1{
+    font-size: 2rem;
+    text-align: left;
+    padding: 10px;
+    padding-bottom: 0;
+  }
+  .blog h5{
+    padding: 0 0 5px 10px;
+    text-align: left;
+  }
+  .blogout{
+    text-align: center;
+  }
+  .card-body{
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .profileblog{
+    padding: 10px;
+  }
+  #myCarousel{
+    font-size: 0;
+  }
+  #c{
+    font-size: 2rem;
+  }
 }

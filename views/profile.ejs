@@ -70,8 +70,8 @@
             <li class="nav-item">
               <a class="nav-link" href="/postblog/<%=user.Id%>" tabindex="-1">Post</a>
             </li>
-            <li class="nav-item ml-auto">
-              <a class="nav-link" aria-current="page" href="/profilepg/<%=user.Id%>"><%= user.First_Name+" "+user.Last_Name%></a>
+            <li class="nav-item">
+              <a class="nav-link" tabindex="-1" href="/profilepg/<%=user.Id%>"><%= user.First_Name+" "+user.Last_Name%></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/" tabindex="-1">Logout</a>
@@ -309,7 +309,7 @@
       <% break;} %>
       <hr class="featurette-divider">
 
-      <div class="row featurette">
+      <div class="row featurette profileblog">
         <% if(i%2==0){ %>
         <div class="col-md-5">
           <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto card-raised" style="background-image: url('<%=blogs[i].Image%>');  background-repeat: no-repeat;
@@ -325,7 +325,7 @@
           <br><br>
           <span id="sp" class="badge badge-danger"><%=blogs[i].Likes%> ❤️</span>
           <span id="sp" class="badge badge-info"><%=Category[blogs[i].Category_Id-1]%></span>
-          <span id="sp" style="margin-left: 430px;" class="badge badge-dark"><%=String(blogs[i].Date_Of_Blog).substring(0, 15)%></span>
+          <span id="sp date" class="badge badge-dark date"><%=String(blogs[i].Date_Of_Blog).substring(0, 15)%></span>
           <hr>
 
         </div>

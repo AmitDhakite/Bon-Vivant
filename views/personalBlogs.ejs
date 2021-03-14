@@ -71,7 +71,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/postblog/<%=user.Id%>" tabindex="-1">Post</a>
             </li>
-            <li class="nav-item ml-auto">
+            <li class="nav-item ">
               <a class="nav-link" aria-current="page" href="/profilepg/<%=user.Id%>"><%=user.First_Name+" "+user.Last_Name %></a>
             </li>
             <li class="nav-item">
@@ -105,7 +105,7 @@
       <% i++; %>
       <hr class="featurette-divider">
 
-      <div class="row featurette">
+      <div class="row featurette profileblog">
         <% if(i%2==0){ %>
         <div class="col-md-5">
           <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto card-raised" style="background-image: url('<%=blog.Image%>');  background-repeat: no-repeat;
@@ -115,19 +115,19 @@
         </div>
         <% } %>
         <div class="col-md-7">
-          <h2 class="featurette-heading" style="margin-top: 50px; text-align: left;"><%=blog.Title%><span class="text-muted"></span></h2>
+          <h2 class="featurette-heading bloghead" style="text-align: left;"><%=blog.Title%><span class="text-muted"></span></h2>
           <h5><strong>Posted by <%=user.First_Name+" "+user.Last_Name%></strong></h5>
           <p class="lead" style="font-size: 1.5rem; line-height: 2rem;"><br><%=blog.Content.slice(0, 350)%>.....<a href="/blog/<%=blog.Id%>/<%=user.Id%>">Read More</a></p>
           <br><br>
           <span id="sp" class="badge badge-danger"><%=blog.Likes%> ❤️</span>
           <span id="sp" class="badge badge-info"><%=cats[blog.Category_Id-1]%></span>
-          <span id="sp" style="margin-left: 430px;" class="badge badge-dark"><%=String(blog.Date_Of_Blog).substring(0, 15)%></span>
+          <span id="sp" class="date badge badge-dark"><%=String(blog.Date_Of_Blog).substring(0, 15)%></span>
           <hr>
 
         </div>
         <% if(i%2!=0){ %>
         <div class="col-md-5">
-          <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto card-raised" style="background-image: url(blog.Image);  background-repeat: no-repeat;
+          <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto card-raised" style="background-image: url('<%=blog.Image%>');  background-repeat: no-repeat;
               background-position: center;
               background-size: cover;" width="500" height="500">
           </svg>
@@ -152,7 +152,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="js/bundle.min.js" crossorigin="anonymous"></script>
-
+  <script type="text/javascript">
+    mybutton = document.getElementById("myBtn");
+    window.onscroll = function() {
+      scrollFunction()
+    };
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    function topFunction() {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    }
+  </script>
 
 </body>
 
