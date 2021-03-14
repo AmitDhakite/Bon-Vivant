@@ -378,6 +378,9 @@ section .section-title {
     padding-bottom: 250px;
     padding-left: 0;
   }
+  .togbut{
+    background-color: black;
+  }
   .collapse{
     /* background-color: grey; */opacity: 1;
     width: 75%;
