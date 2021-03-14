@@ -221,7 +221,7 @@ app.post('/postblog', upload.array('image'), async (req, res, next) => {
       urls.push(newPath);
       fs.unlinkSync(path);
     }
-    console.log(urls[0].url);
+    // console.log(urls[0].url);
     con.query("SELECT Id FROM Category WHERE Type_Of_Cousine=?", req.body.category, function(err, id) {
       if (!err) {
         // console.log(req.file);
