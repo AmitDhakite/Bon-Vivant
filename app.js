@@ -234,10 +234,12 @@ app.post('/postblog', upload.array('image'), async (req, res, next) => {
           if (!er) {
             res.redirect("/profilepg/" + req.body.Id);
           } else {
+            res.send(er);
             console.log(er);
           }
         });
       } else {
+        res.send(err);
         console.log(err);
       }
     });
