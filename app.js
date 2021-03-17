@@ -1,12 +1,12 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const path = require("path");
-var multer = require("multer");
-const upload = require('./multer');
-const cloudinary = require("./cloudinary");
+const upload = require("./multer.js");
+const {cloudinary} = require('./cloudinary.js');
 const fs = require("fs");
 
 //////////////////////////////////////////////
@@ -208,20 +208,21 @@ app.get("/postblog/:id", function(req, res) {
   });
 });
 
-app.post('/postblog', upload.array('image'), async (req, res, next) => {
-  const uploader = async (path) => await cloudinary.uploads(path, 'Images')
-  if (req.method === 'POST') {
-    const urls = [];
-    const files = req.files;
-    for (const file of files) {
-      const {
-        path
-      } = file;
-      const newPath = await uploader(path);
-      urls.push(newPath);
-      fs.unlinkSync(path);
-    }
-    // console.log(urls[0].url);
+// app.post("/postblog", upload.single('image'), async (req, res, next)=>{
+//   console.log(req.file);
+//   const result = await cloudinary.uploader.upload(req.file.path);
+//   const post_details={
+//     image: result.public_id
+//   }
+//   console.log(result.url);
+//   res.status(200).json({post_details});
+// });
+
+app.post('/postblog', upload.single('image'), async (req, res, next) => {
+  const result = await cloudinary.uploader.upload(req.file.path);
+  const post_details={
+    image: result.public_id
+  }
     con.query("SELECT Id FROM Category WHERE Type_Of_Cousine=?", req.body.category, function(err, id) {
       if (!err) {
         // console.log(req.file);
@@ -229,7 +230,7 @@ app.post('/postblog', upload.array('image'), async (req, res, next) => {
         // console.log(req.body);
         let dt = new Date();
         const sql = "INSERT INTO Blog (User_Id, Category_Id, Title, Content, Image, Date_Of_Blog, Likes) VALUES (?,?,?,?,?,?,?)";
-        const values = [req.body.Id, id[0].Id, req.body.title, req.body.content, urls[0].url, dt, 0];
+        const values = [req.body.Id, id[0].Id, req.body.title, req.body.content, result.url, dt, 0];
         con.query(sql, values, function(er, result) {
           if (!er) {
             res.redirect("/profilepg/" + req.body.Id);
@@ -243,11 +244,6 @@ app.post('/postblog', upload.array('image'), async (req, res, next) => {
         console.log(err);
       }
     });
-  } else {
-    res.status(450).json({
-      err: "Images not uploaded Successfully"
-    });
-  }
 });
 
 app.get("/blogs/:id", function(req, res) {
