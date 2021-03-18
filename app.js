@@ -364,6 +364,16 @@ app.get("/like/:uid/:bid", function(req, res) {
   });
 });
 
+app.get("/delete/:bid/:uid", function(req, res){
+  con.query("DELETE From Blog WHERE Id=?", req.params.bid, function(err, result){
+    if(!err){
+      res.redirect("/blogs/"+req.params.uid);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
 app.listen(process.env.PORT || 3000, function() {
   console.log("Started listening on port 3000");
 });

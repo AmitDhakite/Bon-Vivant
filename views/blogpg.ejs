@@ -121,6 +121,9 @@
         <input type="text" class="comtext fluid-container"name="comment" >
         <button type="submit" class="btn btn-sm btn-info" name="button">Post</button>
       </form>
+      <% if(blog.User_Id===user.Id){ %>
+        <a type="button" class="btn btn-dark" href="/delete/<%=blog.Id%>/<%=user.Id%>"name="button">Delete this Post</a>
+      <% } %>
     </div>
   </div>
   </div>
