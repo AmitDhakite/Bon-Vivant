@@ -182,7 +182,7 @@ app.get("/profilepg/:user", function(req, res) {
   con.query("Select * FROM User Where id=?", req.params.user, function(err, person) {
     if (!err) {
       getUsers();
-      con.query("SELECT * FROM likes, blog where likes.Id_Of_Blog=blog.Id and likes.Id_Of_User=?", req.params.user, function(error, blogs) {
+      con.query("SELECT * FROM Likes, Blog where Likes.Id_Of_Blog=Blog.Id and Likes.Id_Of_User=?", req.params.user, function(error, blogs) {
         res.render("profilepg", {
           user: person[0],
           blogs: blogs,
