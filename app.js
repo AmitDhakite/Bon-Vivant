@@ -99,6 +99,7 @@ app.get("/createTableForLikes", function(req, res) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("/", function(req, res) {
+  getUsers();
   res.render("home");
 });
 
@@ -320,27 +321,59 @@ app.post("/comment1/:blog_id/:user_id", function(req, res) {
   });
 });
 
+// app.get("/blog/:bid/:uid", function(req, res) {
+//   con.query("Select * FROM User Where Id=?", req.params.uid, function(err, person) {
+//     if (!err) {
+//       con.query("SELECT * FROM Comments WHERE Id_Of_Blog = ?", req.params.bid, function(ee, foundComments) {
+//         // console.log(foundComments);
+//         con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function(er, blog) {
+//
+//           con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result) {
+//             // console.log(result);
+//             getUsers();
+//             // console.log(users);
+//             res.render("blogpg", {
+//               user: person[0],
+//               blog: blog[0],
+//               cats: cats,
+//               comments: foundComments,
+//               users: users,
+//               liked: result
+//             });
+//           });
+//         });
+//       });
+//     } else {
+//       console.log("this" + err);
+//     }
+//   });
+// });
+
 app.get("/blog/:bid/:uid", function(req, res) {
   con.query("Select * FROM User Where Id=?", req.params.uid, function(err, person) {
     if (!err) {
-      con.query("SELECT * FROM Comments WHERE Id_Of_Blog = ?", req.params.bid, function(ee, foundComments) {
-        // console.log("Comments: "+foundComments[0].Comment);
-        con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function(er, blog) {
-
-          con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result) {
-            // console.log("Result: "+result.length);
-            getUsers();
-            // console.log("Users: "+users);
-            res.render("blogpg", {
-              user: person[0],
-              blog: blog[0],
-              cats: cats,
-              comments: foundComments,
-              users: users,
-              liked: result
-            });
+      con.query("SELECT Blog.Id as Blog_Id, Blog.User_Id, Blog.Content, Blog.Title, Blog.Image, Blog.Date_Of_Blog, Blog.Likes, Blog.Category_Id, Comments.Id_Of_Commenter, Comments.Comment, Likes From Blog, Comments WHERE Blog.Id=Comments.Id_Of_Blog", function(errrr, result1){
+        if(!errrr){
+        con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result) {
+          // console.log(result);
+          if(!error){
+          getUsers();
+          console.log(result1);
+          // console.log(users);
+          res.render("blogpg", {
+            user: person[0],
+            blog: result1,
+            cats: cats,
+            users: users,
+            liked: result
           });
+        } else {
+          console.log(error);
+        }
         });
+      } else {
+        console.log(errrr);
+      }
       });
     } else {
       console.log("this" + err);
