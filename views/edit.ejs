@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Bon Vivant-Post Edit</title>
+  <base href="/">
+  <link rel="icon" href="../images/l.svg">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/post.css">
+</head>
+
+<body>
+  <main class="d-flex align-items-center min-vh-100 py-3 py-md-0">
+    <div class="container" style="padding: 50px;">
+      <div class="card login-card">
+        <div class="row no-gutters">
+          <div class="col-md-5">
+            <img src="images/post.jpg" alt="login" class="login-card-img">
+          </div>
+          <div class="col-md-7" style="margin-top: -30px;">
+            <div class="card-body">
+              <p class="login-card-description">Edit your Blog</p>
+              <form action="/editblog" method="post">
+                <div class="form-group">
+                  <label for="title" class="sr-only">Title</label>
+                  <input type="text" name="title" value="<%=blog.Title%>" id="email" class="form-control" autocomplete="off">
+                </div>
+                <div class="form-group mb-4">
+                  <label for="password" class="sr-only">Content</label>
+                  <textarea name="content" id="email" class="form-control" style="height:200px;" placeholder="Content" autocomplete="off"><%=blog.Content%></textarea>
+                </div>
+                <input type="hidden" name="blog_id" value="<%=blog.Id%>">
+                <div class="form-group">
+                  <label for="exampleFormControlSelect1">Select Category</label>
+                  <select name="category"class="form-control" id="exampleFormControlSelect1">
+                    <% if(blog.Category_Id === 1){ %>
+                      <option selected>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                  <% } else if(blog.Category_Id === 2){%>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option selected>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                  <% } else if(blog.Category_Id === 3){%>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option selected>Italian</option>
+                  <% } else if(blog.Category_Id === 4){%>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option selected>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                  <% } else if(blog.Category_Id === 5){%>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option selected>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                  <% } else if(blog.Category_Id === 6){ %>
+                      <option>Indian</option>
+                      <option selected>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                  <% } else if(blog.Category_Id === 7){ %>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option selected>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                  <% } else if(blog.Category_Id === 8){ %>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option selected>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option>StreetFood</option>
+                      <option>Italian</option>
+                <% } else if(blog.Category_Id === 9){ %>
+                      <option>Indian</option>
+                      <option>BreakFast</option>
+                      <option>Chinese</option>
+                      <option>NonVeg</option>
+                      <option>Mexican</option>
+                      <option>Global</option>
+                      <option>Japanese</option>
+                      <option selected>StreetFood</option>
+                      <option>Italian</option>
+                <%  }  %>
+                      </select>
+                </div>
+                <button type="submit" id="login" class="btn btn-block login-btn mb-4" name="Id" value="<%=user_id%>">Save Your Changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

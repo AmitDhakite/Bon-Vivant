@@ -320,7 +320,7 @@
         <% } %>
         <div class="col-md-7">
           <h2 class="featurette-heading" style="margin-top: 50px; text-align: left;"><%=blogs[i].Title%></h2>
-          <h5><strong>Posted by <%=users[(blogs[i].User_Id)-1].First_Name+" "+users[(blogs[i].User_Id)-1].Last_Name%></strong></h5>
+          <h5><strong>Posted by <%=users.get(blogs[i].User_Id)%></strong></h5>
           <p class="lead" style="font-size: 1.5rem; line-height: 2rem;"><br><%=blogs[i].Content.slice(0, 350)%>.....<a href="/blog/<%=blogs[i].Id%>/<%=user.Id%>">Read More</a></p>
           <br><br>
           <span id="sp" class="badge badge-danger"><%=blogs[i].Likes%> ❤️</span>

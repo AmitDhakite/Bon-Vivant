@@ -123,7 +123,7 @@
             <% } %>
             <div class="col-md-7">
               <h2 class="featurette-heading" style="text-align: left;margin-top: 50px;"><%=blog.Title%></h2>
-              <h5><strong>Posted by <%=users[(blog.User_Id)-1].First_Name+" "+users[(blog.User_Id)-1].Last_Name%></strong></h5>
+              <h5><strong>Posted by <%=users.get(blog.User_Id)%></strong></h5>
               <p class="lead" style="font-size: 1.5rem; line-height: 2rem;"><br><%=blog.Content.slice(0, 350)%>.....<a href="/blog/<%=blog.Id%>/<%=user.Id%>">Read More</a></p>
               <br><br>
               <span id="sp" class="badge badge-danger"><%=blog.Likes%> ❤️</span>

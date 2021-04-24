@@ -8,7 +8,7 @@ const path = require("path");
 const upload = require("./multer.js");
 const {cloudinary} = require('./cloudinary.js');
 const fs = require("fs");
-
+const md5 = require("md5");
 //////////////////////////////////////////////
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({
@@ -18,19 +18,21 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 const cats = ["Indian", "Chinese", "Italian", "Non-Veg", "Global", "BreakFast", "Japanse", "Mexican", "Street Food"];
-var users = [];
+var users = new Map();
 
-function getUsers() {
-  con.query("SELECT * FROM User", function(err, uss) {
-    users = uss;
+function getUsers(){
+  con.query("SELECT * FROM User", function(err, uss){
+    uss.forEach((user) => {
+      var name = user.First_Name+" "+user.Last_Name;
+      users.set(user.Id, `${name}`);
+    });
   });
 }
-
 var con = mysql.createConnection({
-  host: "sql3.freesqldatabase.com",
-  user: "sql3398789",
-  password: "PqMkQXEeId",
-  database: "sql3398789",
+  host: "blgsoenyjh4cujzsu5kq-mysql.services.clever-cloud.com",
+  user: "u9tce37ovxwxe4ce",
+  password: "c5jCgRV9AJnA5f2I1bV4",
+  database: "blgsoenyjh4cujzsu5kq",
   multipleQueries: true
 });
 con.connect(function(err) {
@@ -41,9 +43,10 @@ con.connect(function(err) {
   }
 });
 
-///////////////////////////////// USER TABLE ///////////////////////////////////////////////////////////////////////
+
+// ///////////////////////////////// USER TABLE ///////////////////////////////////////////////////////////////////////
 app.get("/createTableForUser", function(req, res) {
-    con.query("CREATE TABLE User (Id INT NOT NULL AUTO_INCREMENT, First_Name VARCHAR(255) NOT NULL, Last_Name VARCHAR(255) NOT NULL, Email VARCHAR(255) NOT NULL, Contact_No VARCHAR(255) NOT NULL, Password VARCHAR(255) NOT NULL, PRIMARY KEY(Id))", function(err, result) {
+  con.query("CREATE TABLE User (Id INT NOT NULL AUTO_INCREMENT, First_Name VARCHAR(255) NOT NULL, Last_Name VARCHAR(255) NOT NULL, Email VARCHAR(255) NOT NULL UNIQUE, Contact_No VARCHAR(255) NOT NULL, Password VARCHAR(255) NOT NULL CHECK(LENGTH(Password)>=6), PRIMARY KEY(Id))", function(err, result) {
     if (!err) {
       res.send("<h1>Table Created</h1>");
       console.log("Table Created!!");
@@ -98,6 +101,7 @@ app.get("/createTableForLikes", function(req, res) {
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 app.get("/", function(req, res) {
   getUsers();
   res.render("home");
@@ -105,7 +109,10 @@ app.get("/", function(req, res) {
 
 app.get("/login", function(req, res) {
   getUsers();
-  res.render("login");
+  res.render("login", {
+    incorrectEmail: false,
+    incorrectPassword: false
+  });
 });
 
 app.get("/profile", function(req, res) {
@@ -116,24 +123,31 @@ app.post("/login", function(req, res) {
   con.query("SELECT * FROM User WHERE Email=?", req.body.email, function(err, result) {
     if (!err) {
       if (result.length > 0) {
-        if (result[0].Password === req.body.password) {
-          con.query("SELECT * FROM Blog ORDER BY Likes DESC", function(er, blogs) {
-            if (!er) {
-              res.render("profile", {
-                user: result[0],
-                blogs: blogs,
-                Category: cats,
-                users: users
-              });
-            } else {
-              console.log(er);
-            }
+        if (result[0].Password === md5(req.body.password)) {
+          con.query("SELECT * FROM Blog ORDER BY Likes DESC", function(er, blogs){
+              if(!er){
+                getUsers();
+                res.render("profile", {
+                  user: result[0],
+                  blogs: blogs,
+                  Category: cats,
+                  users: users
+                });
+              } else {
+                console.log(er);
+              }
           });
-        } else {
-          res.send("<h1>Incorrect Password, Please try again</h1>");
+            } else {
+          res.render("login", {
+            incorrectPassword: true,
+            incorrectEmail: false
+          });
         }
       } else {
-        res.send("<h1>Looks like you are not registered, Please register first!!</h1>");
+        res.render("login", {
+          incorrectEmail: true,
+          incorrectPassword: false
+        });
       }
     } else {
       console.log(err);
@@ -142,23 +156,31 @@ app.post("/login", function(req, res) {
 });
 
 app.get("/register", function(req, res) {
-  res.render("register");
+  res.render("register", {
+    ps: false,
+    em: false
+  });
 });
 
 app.post("/register", function(req, res) {
   const sql = "INSERT INTO User (First_Name, Last_Name, Email, Contact_No, Password) VALUES (?,?,?,?,?)";
-  const values = [req.body.firstName, req.body.lastName, req.body.email, req.body.number, req.body.password];
+  const values = [req.body.firstName, req.body.lastName, req.body.email, req.body.number, md5(req.body.password)];
   con.query(sql, values, function(err, result) {
     if (!err) {
       res.redirect("/login");
     } else {
-      console.log(err);
+      const emailError = ((err.errno===1062)?(true):(false));
+      const passwordError = ((err.errno===3819)?(true):(false));
+      res.render("register", {
+        em: emailError,
+        ps: ((!emailError)&&(passwordError))
+      });
     }
   });
 });
 
 app.get("/Category/:c/:id", function(req, res) {
-  con.query("SELECT * FROM Blog WHERE Category_Id=(SELECT Id FROM Category WHERE Type_Of_Cousine=?) ORDER BY Date_Of_Blog DESC", req.params.c, function(err, foundBlogs) {
+  con.query("SELECT * FROM Blog WHERE Category_Id=(SELECT Id FROM Category WHERE Type_Of_Cousine=?) ORDER BY Date_Of_Blog DESC", req.params.c, function(err, foundBlogs){
     if (!err) {
       con.query("Select * FROM User Where id=?", req.params.id, function(er, person) {
         if (!er) {
@@ -167,7 +189,7 @@ app.get("/Category/:c/:id", function(req, res) {
             user: person[0],
             blogs: foundBlogs,
             Category: req.params.c,
-            users: users
+            users:users
           });
         } else {
           console.log(er);
@@ -183,7 +205,7 @@ app.get("/profilepg/:user", function(req, res) {
   con.query("Select * FROM User Where id=?", req.params.user, function(err, person) {
     if (!err) {
       getUsers();
-      con.query("SELECT * FROM Likes, Blog where Likes.Id_Of_Blog=Blog.Id and Likes.Id_Of_User=?", req.params.user, function(error, blogs) {
+      con.query("SELECT * FROM Likes, Blog where Likes.Id_Of_Blog=Blog.Id and Likes.Id_Of_User=?", req.params.user, function(error, blogs){
         res.render("profilepg", {
           user: person[0],
           blogs: blogs,
@@ -208,16 +230,6 @@ app.get("/postblog/:id", function(req, res) {
     }
   });
 });
-
-// app.post("/postblog", upload.single('image'), async (req, res, next)=>{
-//   console.log(req.file);
-//   const result = await cloudinary.uploader.upload(req.file.path);
-//   const post_details={
-//     image: result.public_id
-//   }
-//   console.log(result.url);
-//   res.status(200).json({post_details});
-// });
 
 app.post('/postblog', upload.single('image'), async (req, res, next) => {
   const result = await cloudinary.uploader.upload(req.file.path);
@@ -349,34 +361,63 @@ app.post("/comment1/:blog_id/:user_id", function(req, res) {
 //   });
 // });
 
-app.get("/blog/:bid/:uid", function(req, res) {
+// app.get("/blog/:bid/:uid", function(req, res) {
+//   con.query("Select * FROM User Where Id=?", req.params.uid, function(err, person) {
+//     if (!err) {
+//       con.query("SELECT Blog.Id as Blog_Id, Blog.User_Id, Blog.Content, Blog.Title, Blog.Image, Blog.Date_Of_Blog, Blog.Likes, Blog.Category_Id, Comments.Id_Of_Commenter, Comments.Comment, Likes From Blog, Comments WHERE Blog.Id=Comments.Id_Of_Blog", function(errrr, result1){
+//         if(!errrr){
+//         con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result) {
+//           // console.log(result);
+//           if(!error){
+//           getUsers();
+//           console.log(result1);
+//           // console.log(users);
+//           res.render("blogpg", {
+//             user: person[0],
+//             blog: result1,
+//             cats: cats,
+//             users: users,
+//             liked: result
+//           });
+//         } else {                                       // errorrr
+//           console.log(error);
+//         }
+//         });
+//       } else {
+//         console.log(errrr);
+//       }
+//       });
+//     } else {
+//       console.log("this" + err);
+//     }
+//   });
+// });
+
+app.get("/blog/:bid/:uid", function(req, res){
   con.query("Select * FROM User Where Id=?", req.params.uid, function(err, person) {
     if (!err) {
-      con.query("SELECT Blog.Id as Blog_Id, Blog.User_Id, Blog.Content, Blog.Title, Blog.Image, Blog.Date_Of_Blog, Blog.Likes, Blog.Category_Id, Comments.Id_Of_Commenter, Comments.Comment, Likes From Blog, Comments WHERE Blog.Id=Comments.Id_Of_Blog", function(errrr, result1){
-        if(!errrr){
-        con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result) {
-          // console.log(result);
-          if(!error){
-          getUsers();
-          console.log(result1);
-          // console.log(users);
-          res.render("blogpg", {
-            user: person[0],
-            blog: result1,
-            cats: cats,
-            users: users,
-            liked: result
+      con.query("SELECT * FROM Comments WHERE Id_Of_Blog = ?", req.params.bid, function(ee, foundComments){
+        // console.log("Comments: "+foundComments[0].Comment);
+        con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function(er, blog){
+
+          con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result){
+            // console.log("Result: "+result.length);
+            getUsers();
+            // console.log("Users: "+users);
+            res.render("blogpg", {
+              user: person[0],
+              blog: blog[0],
+              cats: cats,
+              comments: foundComments,
+              users: users,
+              liked: result,
+              edit: false
+            });
           });
-        } else {
-          console.log(error);
-        }
         });
-      } else {
-        console.log(errrr);
-      }
       });
     } else {
-      console.log("this" + err);
+      console.log("this"+err);
     }
   });
 });
@@ -403,6 +444,66 @@ app.get("/delete/:bid/:uid", function(req, res){
       res.redirect("/blogs/"+req.params.uid);
     } else {
       console.log(err);
+    }
+  });
+});
+
+app.get("/edit/:bid/:uid", function(req, res){
+  con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function(err, result){
+    if(!err)
+    {
+      res.render("edit", {
+        user_id: req.params.uid,
+        blog: result[0]
+      });
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+app.post("/editblog", function(req, res){
+  con.query("SELECT Id FROM Category WHERE Type_Of_Cousine=?", req.body.category, function(err, id) {
+    if(!err){
+      con.query("UPDATE Blog SET Category_Id=?, Title=?, Content=? WHERE Id=?", [id[0].Id, req.body.title, req.body.content, req.body.blog_id], function(error, result){
+        if(!error){
+          res.redirect("/blogedited/"+req.body.blog_id+"/"+req.body.Id);
+        } else
+        {
+          console.log(error);
+        }
+      });
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+app.get("/blogedited/:bid/:uid", function(req, res){
+  con.query("Select * FROM User Where Id=?", req.params.uid, function(err, person) {
+    if (!err) {
+      con.query("SELECT * FROM Comments WHERE Id_Of_Blog = ?", req.params.bid, function(ee, foundComments){
+        // console.log("Comments: "+foundComments[0].Comment);
+        con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function(er, blog){
+
+          con.query("SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?", [req.params.uid, req.params.bid], function(error, result){
+            // console.log("Result: "+result.length);
+            getUsers();
+            // console.log("Users: "+users);
+            res.render("blogpg", {
+              user: person[0],
+              blog: blog[0],
+              cats: cats,
+              comments: foundComments,
+              users: users,
+              liked: result,
+              edit: true
+            });
+          });
+        });
+      });
+    } else {
+      console.log("this"+err);
     }
   });
 });

@@ -1003,7 +1003,9 @@ h6, .h6 {
 }
 .blog{
   text-align: center;
-  padding: 100px;
+  width: auto;
+  padding: 60px 300px 50px 350px;
+  margin: auto;
 }
 .blog h1{
   text-align: left;

@@ -1,4 +1,4 @@
-<% try{ %>
+
 <!doctype html>
 <html lang="en">
 
@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.80.0">
-  <title>Bon Vivant-Post</title>
+  <title>Category</title>
 
   <base href="/">
 
@@ -73,7 +73,7 @@
             <li class="nav-item">
               <a class="nav-link" href="/postblog/<%=user.Id%>" tabindex="-1">Post</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item ml-auto">
               <a class="nav-link" aria-current="page" href="/profilepg/<%=user.Id%>"><%=user.First_Name+" "+user.Last_Name %></a>
             </li>
             <li class="nav-item">
@@ -84,85 +84,90 @@
       </div>
     </nav>
   </header>
-
-<div class="blogout">
 <div class="blog ">
-  <div class="card blogcard card-raised img-raised">
-    <h1><strong><%=blog[0].Title%></strong></h1>
-    <h5><strong>Posted <%=String(blog[0].Date_Of_Blog).substring(0, 10)%>, <%=String(blog[0].Date_Of_Blog).substring(10, 15)%> by  <%=users[(blog[0].User_Id)-1].First_Name+" "+users[(blog[0].User_Id)-1].Last_Name%></strong></h5>
-      <img class="card-img-top img-raised" src='<%=blog[0].Image%>' alt="Card image cap"><br><br><br><br>
-  <div class="card-body content">
-    <h4 style="text-align: left;"class="card-title"><strong><%=blog[0].Content%></strong></h4>
-    <% if(liked.length==0){ %>
-      <% var ref = "like/"+user.Id+"/"+blog[0].Blog_Id; %>
-      <a class="btn like btn-primary" href="<%=ref%>">Like</a>
-    <% } else { %>
-      <span id="sp" class="badge badge-primary">Liked</span>
-    <% } %>
+  <h1><strong><%=blog.Title%></strong></h1>
+  <h5><strong>Posted <%=String(blog.Date_Of_Blog).substring(0, 10)%>, <%=String(blog.Date_Of_Blog).substring(10, 15)%> by  <%=users.get(blog.User_Id)%></strong></h5>
 
-    <span id="sp" class="badge badge-danger"><%=blog[0].Likes%> ❤️</span>
-    <span id="sp" class="badge badge-info"><%=cats[blog[0].Category_Id-1]%></span>
-    <!-- <span id="sp" style="margin-left: 310px;" class="badge badge-dark"><%=String(blog.Date_Of_Blog).substring(0, 15)%></span> -->
-    <div class="fluid-container comments">
-      <br>
-      <h4><strong>Comments</strong></h4>
+  <% if(edit===true) {%>
+    <span class="badge badge-primary" id="updated">Changes Saved Successfully!</span>
+  <% } %>
 
-      <% blog.forEach(function(com){ %>
-        <div class="container comment_con img-raised1">
-          <h5><img src="images/com.svg" /></i><%=users[com.Id_Of_Commenter-1].First_Name+" "+users[com.Id_Of_Commenter-1].Last_Name%></h5>
-          <h6><%=com.Comment%></h6>
-        </div>
-      <% }); %>
-    </div>
-    <div class="fluid-container comment">
+  <div class="card blogcard card-raised img-raised">  <img class="card-img-top img-raised" src='<%=blog.Image%>' alt="Card image cap"><br><br><br><br>
+    <div class="card-body">
+      <h4 style="text-align: left;"class="card-title"><strong><%=blog.Content%></strong></h4>
 
-      <form class="" action="/comment1/<%=blog[0].Blog_Id%>/<%=user.Id%>" method="post">
-        <label for=""><strong>Comment here...</strong></label>
-        <input type="text" class="comtext fluid-container"name="comment" >
-        <button type="submit" class="btn btn-sm btn-info" name="button">Post</button>
-      </form>
-      <% if(blog[0].User_Id===user.Id){ %>
-        <a type="button" class="btn btn-dark" href="/delete/<%=blog[0].Blog_Id%>/<%=user.Id%>"name="button">Delete this Post</a>
+      <% if(liked.length==0){ %>
+        <% var ref = "like/"+user.Id+"/"+blog.Id; %>
+        <a class="btn like btn-primary" href="<%=ref%>">Like</a>
+      <% } else { %>
+        <span id="sp" class="badge badge-primary">Liked</span>
       <% } %>
+
+      <span id="sp" class="badge badge-danger"><%=blog.Likes%> ❤️</span>
+      <span id="sp" class="badge badge-info"><%=cats[blog.Category_Id-1]%></span>
+      <!-- <span id="sp" style="margin-left: 310px;" class="badge badge-dark"><%=String(blog.Date_Of_Blog).substring(0, 15)%></span> -->
+      <div class="fluid-container comments">
+        <br>
+        <h4><strong>Comments</strong></h4>
+
+        <% comments.forEach(function(com){ %>
+          <div class="container comment_con img-raised1">
+            <h5><img src="images/com.svg" /></i><%=users.get(com.Id_Of_Commenter)%></h5>
+            <h6><%=com.Comment%></h6>
+          </div>
+        <% }); %>
+      </div>
+      <div class="fluid-container comment">
+
+        <form class="" action="/comment1/<%=blog.Id%>/<%=user.Id%>" method="post">
+          <label for=""><strong>Comment here...</strong></label>
+          <textarea name="comment" rows="2" cols="80"></textarea>
+          <button type="submit" class="btn btn-sm btn-info" name="button">Post</button>
+        </form>
+        <% if(blog.User_Id===user.Id){ %>
+          <a type="button" id="delete" class="btn btn-dark " href="/delete/<%=blog.Id%>/<%=user.Id%>"name="button">Delete This Post</a>
+          <a type="button" id="delete" class="btn btn-dark " href="/edit/<%=blog.Id%>/<%=user.Id%>" name="edit">Edit This Post</a>
+        <% } %>
+      </div>
+    </div>
     </div>
   </div>
-  </div>
-</div>
-</div>
+  <footer class="container">
+    <p class="float-end"><button class="btn btn-dark" onclick="topFunction()" id="myBtn" title="Go to top">Top</button></p>
+    <p>&copy; 2020–2021 BonVivant Inc. &middot; <a >Privacy</a> &middot; <a >Terms</a></p>
+  </footer>
 
-<footer class="container">
-  <p class="float-end"><button class="btn btn-dark" onclick="topFunction()" id="myBtn" title="Go to top">Top</button></p>
-  <p>&copy; 2020–2021 BonVivant Inc. &middot; <a >Privacy</a> &middot; <a >Terms</a></p>
-</footer>
-  <script type="text/javascript">
-    mybutton = document.getElementById("myBtn");
-    window.onscroll = function() {
-      scrollFunction()
-    };
-    function scrollFunction() {
-      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-      } else {
-        mybutton.style.display = "none";
+
+    <script type="text/javascript">
+    // var error = <%= edit %>;
+
+
+
+      mybutton = document.getElementById("myBtn");
+      window.onscroll = function() {
+        scrollFunction()
+      };
+      function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+          mybutton.style.display = "block";
+        } else {
+          mybutton.style.display = "none";
+        }
       }
-    }
-    function topFunction() {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-    }
-  </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <script src="js/bundle.min.js" crossorigin="anonymous"></script>
+      function showAlert() {
+        alert("Changes Saved Successfully!!");
+      }
+      function topFunction() {
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/bundle.min.js" crossorigin="anonymous"></script>
 
 
-</body>
+  </body>
 
-</html>
-<% } catch(error){ %>
-<%  if(error) %>
-  <script>
-location.reload(true/false);
-</script>
-<% } %>
+  </html>
