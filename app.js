@@ -17,6 +17,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
+const PORT = process.env.PORT || '3000';
+
+
 const cats = ["Indian", "Chinese", "Italian", "Non-Veg", "Global", "BreakFast", "Japanse", "Mexican", "Street Food"];
 var users = new Map();
 
@@ -508,6 +511,6 @@ app.get("/blogedited/:bid/:uid", function(req, res){
   });
 });
 
-app.listen(process.env.PORT || 3000, function() {
+app.listen(PORT, function() {
   console.log("Started listening on port 3000");
 });
