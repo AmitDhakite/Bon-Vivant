@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
@@ -147,45 +146,46 @@ app.get("/profile", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
-  con.query("SELECT * FROM User WHERE Email=?", req.body.email, function (
-    err,
-    result
-  ) {
-    if (!err) {
-      if (result.length > 0) {
-        if (result[0].Password === md5(req.body.password)) {
-          con.query("SELECT * FROM Blog ORDER BY Likes DESC", function (
-            er,
-            blogs
-          ) {
-            if (!er) {
-              getUsers();
-              res.render("profile", {
-                user: result[0],
-                blogs: blogs,
-                Category: cats,
-                users: users,
-              });
-            } else {
-              console.log(er);
-            }
-          });
+  con.query(
+    "SELECT * FROM User WHERE Email=?",
+    req.body.email,
+    function (err, result) {
+      if (!err) {
+        if (result.length > 0) {
+          if (result[0].Password === md5(req.body.password)) {
+            con.query(
+              "SELECT * FROM Blog ORDER BY Likes DESC",
+              function (er, blogs) {
+                if (!er) {
+                  getUsers();
+                  res.render("profile", {
+                    user: result[0],
+                    blogs: blogs,
+                    Category: cats,
+                    users: users,
+                  });
+                } else {
+                  console.log(er);
+                }
+              }
+            );
+          } else {
+            res.render("login", {
+              incorrectPassword: true,
+              incorrectEmail: false,
+            });
+          }
         } else {
           res.render("login", {
-            incorrectPassword: true,
-            incorrectEmail: false,
+            incorrectEmail: true,
+            incorrectPassword: false,
           });
         }
       } else {
-        res.render("login", {
-          incorrectEmail: true,
-          incorrectPassword: false,
-        });
+        console.log(err);
       }
-    } else {
-      console.log(err);
     }
-  });
+  );
 });
 
 app.get("/register", function (req, res) {
@@ -225,22 +225,23 @@ app.get("/Category/:c/:id", function (req, res) {
     req.params.c,
     function (err, foundBlogs) {
       if (!err) {
-        con.query("Select * FROM User Where id=?", req.params.id, function (
-          er,
-          person
-        ) {
-          if (!er) {
-            getUsers();
-            res.render("Category", {
-              user: person[0],
-              blogs: foundBlogs,
-              Category: req.params.c,
-              users: users,
-            });
-          } else {
-            console.log(er);
+        con.query(
+          "Select * FROM User Where id=?",
+          req.params.id,
+          function (er, person) {
+            if (!er) {
+              getUsers();
+              res.render("Category", {
+                user: person[0],
+                blogs: foundBlogs,
+                Category: req.params.c,
+                users: users,
+              });
+            } else {
+              console.log(er);
+            }
           }
-        });
+        );
       } else {
         console.log(err);
       }
@@ -249,43 +250,45 @@ app.get("/Category/:c/:id", function (req, res) {
 });
 
 app.get("/profilepg/:user", function (req, res) {
-  con.query("Select * FROM User Where id=?", req.params.user, function (
-    err,
-    person
-  ) {
-    if (!err) {
-      getUsers();
-      con.query(
-        "SELECT * FROM Likes, Blog where Likes.Id_Of_Blog=Blog.Id and Likes.Id_Of_User=?",
-        req.params.user,
-        function (error, blogs) {
-          res.render("profilepg", {
-            user: person[0],
-            blogs: blogs,
-            Category: cats,
-            users: users,
-          });
-        }
-      );
-    } else {
-      console.log(err);
+  con.query(
+    "Select * FROM User Where id=?",
+    req.params.user,
+    function (err, person) {
+      if (!err) {
+        getUsers();
+        con.query(
+          "SELECT * FROM Likes, Blog where Likes.Id_Of_Blog=Blog.Id and Likes.Id_Of_User=?",
+          req.params.user,
+          function (error, blogs) {
+            res.render("profilepg", {
+              user: person[0],
+              blogs: blogs,
+              Category: cats,
+              users: users,
+            });
+          }
+        );
+      } else {
+        console.log(err);
+      }
     }
-  });
+  );
 });
 
 app.get("/postblog/:id", function (req, res) {
-  con.query("Select * FROM User Where id=?", req.params.id, function (
-    err,
-    person
-  ) {
-    if (!err) {
-      res.render("postblog", {
-        user: person[0],
-      });
-    } else {
-      console.log(err);
+  con.query(
+    "Select * FROM User Where id=?",
+    req.params.id,
+    function (err, person) {
+      if (!err) {
+        res.render("postblog", {
+          user: person[0],
+        });
+      } else {
+        console.log(err);
+      }
     }
-  });
+  );
 });
 
 app.post("/postblog", upload.single("image"), async (req, res, next) => {
@@ -335,20 +338,21 @@ app.get("/blogs/:id", function (req, res) {
     req.params.id,
     function (err, foundBlogs) {
       if (!err) {
-        con.query("Select * FROM User Where id=?", req.params.id, function (
-          er,
-          person
-        ) {
-          if (!er) {
-            res.render("personalBlogs", {
-              user: person[0],
-              blogs: foundBlogs,
-              cats: cats,
-            });
-          } else {
-            console.log(er);
+        con.query(
+          "Select * FROM User Where id=?",
+          req.params.id,
+          function (er, person) {
+            if (!er) {
+              res.render("personalBlogs", {
+                user: person[0],
+                blogs: foundBlogs,
+                cats: cats,
+              });
+            } else {
+              console.log(er);
+            }
           }
-        });
+        );
       } else {
         console.log(err);
       }
@@ -357,28 +361,32 @@ app.get("/blogs/:id", function (req, res) {
 });
 
 app.get("/profile/:user", function (req, res) {
-  con.query("Select * FROM User Where id=?", req.params.user, function (
-    err,
-    person
-  ) {
-    if (!err) {
-      con.query("SELECT * FROM Blog ORDER BY Likes DESC", function (er, blogs) {
-        if (!er) {
-          getUsers();
-          res.render("profile", {
-            user: person[0],
-            blogs: blogs,
-            Category: cats,
-            users: users,
-          });
-        } else {
-          console.log(er);
-        }
-      });
-    } else {
-      console.log(err);
+  con.query(
+    "Select * FROM User Where id=?",
+    req.params.user,
+    function (err, person) {
+      if (!err) {
+        con.query(
+          "SELECT * FROM Blog ORDER BY Likes DESC",
+          function (er, blogs) {
+            if (!er) {
+              getUsers();
+              res.render("profile", {
+                user: person[0],
+                blogs: blogs,
+                Category: cats,
+                users: users,
+              });
+            } else {
+              console.log(er);
+            }
+          }
+        );
+      } else {
+        console.log(err);
+      }
     }
-  });
+  );
 });
 //
 // app.post("/comment/:blog_id/:user_id", function(req, res){
@@ -484,45 +492,47 @@ app.post("/comment1/:blog_id/:user_id", function (req, res) {
 // });
 
 app.get("/blog/:bid/:uid", function (req, res) {
-  con.query("Select * FROM User Where Id=?", req.params.uid, function (
-    err,
-    person
-  ) {
-    if (!err) {
-      con.query(
-        "SELECT * FROM Comments WHERE Id_Of_Blog = ?",
-        req.params.bid,
-        function (ee, foundComments) {
-          // console.log("Comments: "+foundComments[0].Comment);
-          con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function (
-            er,
-            blog
-          ) {
+  con.query(
+    "Select * FROM User Where Id=?",
+    req.params.uid,
+    function (err, person) {
+      if (!err) {
+        con.query(
+          "SELECT * FROM Comments WHERE Id_Of_Blog = ?",
+          req.params.bid,
+          function (ee, foundComments) {
+            // console.log("Comments: "+foundComments[0].Comment);
             con.query(
-              "SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?",
-              [req.params.uid, req.params.bid],
-              function (error, result) {
-                // console.log("Result: "+result.length);
-                getUsers();
-                // console.log("Users: "+users);
-                res.render("blogpg", {
-                  user: person[0],
-                  blog: blog[0],
-                  cats: cats,
-                  comments: foundComments,
-                  users: users,
-                  liked: result,
-                  edit: false,
-                });
+              "SELECT * FROM Blog WHERE Id=?",
+              req.params.bid,
+              function (er, blog) {
+                con.query(
+                  "SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?",
+                  [req.params.uid, req.params.bid],
+                  function (error, result) {
+                    // console.log("Result: "+result.length);
+                    getUsers();
+                    // console.log("Users: "+users);
+                    res.render("blogpg", {
+                      user: person[0],
+                      blog: blog[0],
+                      cats: cats,
+                      comments: foundComments,
+                      users: users,
+                      liked: result,
+                      edit: false,
+                    });
+                  }
+                );
               }
             );
-          });
-        }
-      );
-    } else {
-      console.log("this" + err);
+          }
+        );
+      } else {
+        console.log("this" + err);
+      }
     }
-  });
+  );
 });
 
 app.get("/like/:uid/:bid", function (req, res) {
@@ -550,32 +560,34 @@ app.get("/like/:uid/:bid", function (req, res) {
 });
 
 app.get("/delete/:bid/:uid", function (req, res) {
-  con.query("DELETE From Blog WHERE Id=?", req.params.bid, function (
-    err,
-    result
-  ) {
-    if (!err) {
-      res.redirect("/blogs/" + req.params.uid);
-    } else {
-      console.log(err);
+  con.query(
+    "DELETE From Blog WHERE Id=?",
+    req.params.bid,
+    function (err, result) {
+      if (!err) {
+        res.redirect("/blogs/" + req.params.uid);
+      } else {
+        console.log(err);
+      }
     }
-  });
+  );
 });
 
 app.get("/edit/:bid/:uid", function (req, res) {
-  con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function (
-    err,
-    result
-  ) {
-    if (!err) {
-      res.render("edit", {
-        user_id: req.params.uid,
-        blog: result[0],
-      });
-    } else {
-      console.log(err);
+  con.query(
+    "SELECT * FROM Blog WHERE Id=?",
+    req.params.bid,
+    function (err, result) {
+      if (!err) {
+        res.render("edit", {
+          user_id: req.params.uid,
+          blog: result[0],
+        });
+      } else {
+        console.log(err);
+      }
     }
-  });
+  );
 });
 
 app.post("/editblog", function (req, res) {
@@ -605,45 +617,47 @@ app.post("/editblog", function (req, res) {
 });
 
 app.get("/blogedited/:bid/:uid", function (req, res) {
-  con.query("Select * FROM User Where Id=?", req.params.uid, function (
-    err,
-    person
-  ) {
-    if (!err) {
-      con.query(
-        "SELECT * FROM Comments WHERE Id_Of_Blog = ?",
-        req.params.bid,
-        function (ee, foundComments) {
-          // console.log("Comments: "+foundComments[0].Comment);
-          con.query("SELECT * FROM Blog WHERE Id=?", req.params.bid, function (
-            er,
-            blog
-          ) {
+  con.query(
+    "Select * FROM User Where Id=?",
+    req.params.uid,
+    function (err, person) {
+      if (!err) {
+        con.query(
+          "SELECT * FROM Comments WHERE Id_Of_Blog = ?",
+          req.params.bid,
+          function (ee, foundComments) {
+            // console.log("Comments: "+foundComments[0].Comment);
             con.query(
-              "SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?",
-              [req.params.uid, req.params.bid],
-              function (error, result) {
-                // console.log("Result: "+result.length);
-                getUsers();
-                // console.log("Users: "+users);
-                res.render("blogpg", {
-                  user: person[0],
-                  blog: blog[0],
-                  cats: cats,
-                  comments: foundComments,
-                  users: users,
-                  liked: result,
-                  edit: true,
-                });
+              "SELECT * FROM Blog WHERE Id=?",
+              req.params.bid,
+              function (er, blog) {
+                con.query(
+                  "SELECT * FROM Likes WHERE Id_Of_User=? AND Id_Of_Blog=?",
+                  [req.params.uid, req.params.bid],
+                  function (error, result) {
+                    // console.log("Result: "+result.length);
+                    getUsers();
+                    // console.log("Users: "+users);
+                    res.render("blogpg", {
+                      user: person[0],
+                      blog: blog[0],
+                      cats: cats,
+                      comments: foundComments,
+                      users: users,
+                      liked: result,
+                      edit: true,
+                    });
+                  }
+                );
               }
             );
-          });
-        }
-      );
-    } else {
-      console.log("this" + err);
+          }
+        );
+      } else {
+        console.log("this" + err);
+      }
     }
-  });
+  );
 });
 
 app.listen(PORT, function () {
